@@ -1,0 +1,12 @@
+/* Bonus 2: reduce la demora de gestos sin bloquear zoom ni desplazamiento. */
+button, a, input[type="button"], input[type="submit"], .new-expense-modal__chip {
+  touch-action: manipulation;
+}
+/* Buenas prácticas: foco siempre visible al navegar con teclado. */
+button:focus-visible, a:focus-visible { outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) 
+{
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+  }
+}

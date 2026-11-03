@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import CategoryBadge from './CategoryBadge'
+import AppIcon from './AppIcon'
 import '../styles/ExpenseCard.css'
 
 const moneda = new Intl.NumberFormat('es-AR', {
@@ -25,10 +26,8 @@ export default function ExpenseCard({ gasto }) {
           <span className="expense-card__name">{descripcion}</span>
           <span className="expense-card__category">{gasto.categoria}</span>
         </span>
-        <strong className="expense-card__amount">
-          {moneda.format(gasto.monto)}
-        </strong>
-        <span className="expense-card__arrow" aria-hidden="true">›</span>
+        <strong className="expense-card__amount">{moneda.format(gasto.monto)}</strong>
+        <AppIcon nombre="siguiente" size={20} className="expense-card__arrow" />
       </Link>
     </article>
   )

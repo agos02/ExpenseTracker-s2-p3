@@ -39,4 +39,6 @@
   .expense-card__amount { font-size: 14px; }
 }
 
-.expense-card__link:active { background-color: #DBEAFE; }
+.expense-card__arrow { width: 20px; height: 20px; flex-shrink: 0; }
+.expense-card__link { touch-action: manipulation; transition: background-color 140ms ease; }
+@media (prefers-reduced-motion: reduce) { .expense-card__link { transition: none; } }
