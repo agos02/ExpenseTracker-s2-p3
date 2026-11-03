@@ -9,15 +9,6 @@
 .main-layout-content {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Cada pantalla ocupa el espacio disponible sobre la barra inferior.
-   Se anula su min-height de 100dvh para que no se sume a la barra. */
-.main-layout-content > main {
-  flex: 1;
-  min-height: 0;
 }
 
 .bottom-navigation {
@@ -62,7 +53,14 @@
   border-radius: 6px;
 }
 
-.bottom-navigation-link:active {
-  border-radius: 10px;
-  background-color: #EFF6FF;
+/* Rutas con transición breve; respeta usuarios con movimiento reducido. */
+.route-transition { animation: expense-route-enter 180ms ease-out both; min-width: 0; }
+@keyframes expense-route-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+.bottom-navigation-link { min-height: 44px; touch-action: manipulation; }
+.bottom-navigation-icon { display: inline-flex; align-items: center; justify-content: center; }
+.bottom-navigation-icon svg { width: 24px; height: 24px; }
+.bottom-navigation-link:focus-visible { outline: 3px solid #2563EB; }
+@media (prefers-reduced-motion: reduce) { .route-transition { animation: none; } }

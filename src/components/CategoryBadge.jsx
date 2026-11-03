@@ -1,26 +1,15 @@
+import AppIcon from './AppIcon'
 import '../styles/CategoryBadge.css'
 
-const CATEGORIAS = {
-  Comida: {
-    icono: '🍽️',
-    clase: 'comida',
-  },
-  Transporte: {
-    icono: '🚗',
-    clase: 'transporte',
-  },
-  Servicios: {
-    icono: '⌂',
-    clase: 'servicios',
-  },
-  Otros: {
-    icono: '◆',
-    clase: 'otros',
-  },
+const categorias = {
+  Comida: { clase: 'comida', icono: 'comida' },
+  Transporte: { clase: 'transporte', icono: 'transporte' },
+  Servicios: { clase: 'servicios', icono: 'servicios' },
+  Otros: { clase: 'otros', icono: 'otros' },
 }
 
 export default function CategoryBadge({ categoria }) {
-  const configuracion = CATEGORIAS[categoria] ?? CATEGORIAS.Otros
+  const configuracion = categorias[categoria] ?? categorias.Otros
 
   return (
     <span
@@ -28,7 +17,7 @@ export default function CategoryBadge({ categoria }) {
       role="img"
       aria-label={`Categoría: ${categoria || 'Otros'}`}
     >
-      <span aria-hidden="true">{configuracion.icono}</span>
+      <AppIcon nombre={configuracion.icono} size={23} />
     </span>
   )
 }

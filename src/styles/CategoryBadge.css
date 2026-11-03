@@ -25,3 +25,5 @@
 .category-badge--otros {
   background-color: #EA580C;
 }
+
+.category-badge svg { width: 23px; height: 23px; flex-shrink: 0; }
