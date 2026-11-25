@@ -12,7 +12,7 @@ const moneda = new Intl.NumberFormat('es-AR', {
 // Toda la tarjeta es un enlace real. Al navegar enviamos solamente el ID:
 // el detalle consulta el gasto desde la URL, incluso después de recargar.
 export default function ExpenseCard({ gasto }) {
-  const descripcion = gasto.descripcion || gasto.nombre || 'Gasto'
+  const descripcion = gasto.descripcion || 'Gasto'
 
   return (
     <article className="expense-card">

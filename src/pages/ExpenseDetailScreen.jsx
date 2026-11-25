@@ -11,11 +11,12 @@ const moneda = new Intl.NumberFormat('es-AR', {
 
 function formatearFecha(fecha) {
   if (!fecha) return 'Sin fecha'
-  const [anio, mes, dia] = fecha.split('-').map(Number)
-  const valor = new Date(anio, mes - 1, dia)
-  return Number.isNaN(valor.getTime()) ? fecha : valor.toLocaleDateString('es-AR', {
-    day: '2-digit', month: 'long', year: 'numeric',
-  })
+  const valor = new Date(fecha)
+  return Number.isNaN(valor.getTime())
+    ? fecha
+    : valor.toLocaleDateString('es-AR', {
+        day: '2-digit', month: 'long', year: 'numeric',
+      })
 }
 
 // La ruta es la fuente de verdad: jamás dependemos de state ni de un objeto
@@ -51,12 +52,12 @@ export default function ExpenseDetailScreen() {
             <div className="expense-detail__hero">
               <CategoryBadge categoria={gasto.categoria} />
               <div className="expense-detail__hero-text">
-                <h2>{gasto.descripcion || gasto.nombre || 'Gasto'}</h2>
+                <h2>{gasto.descripcion || 'Gasto'}</h2>
                 <p>{gasto.categoria || 'Otros'}</p>
               </div>
             </div>
             <dl className="expense-detail__fields">
-              <div className="expense-detail__field"><dt>Descripción</dt><dd>{gasto.descripcion || gasto.nombre || 'Sin descripción'}</dd></div>
+              <div className="expense-detail__field"><dt>Descripción</dt><dd>{gasto.descripcion || 'Sin descripción'}</dd></div>
               <div className="expense-detail__field"><dt>Monto</dt><dd className="expense-detail__amount">{moneda.format(gasto.monto)}</dd></div>
               <div className="expense-detail__field"><dt>Categoría</dt><dd>{gasto.categoria || 'Otros'}</dd></div>
               <div className="expense-detail__field"><dt>Fecha</dt><dd>{formatearFecha(gasto.fecha)}</dd></div>

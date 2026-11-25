@@ -58,7 +58,7 @@ export default function NewExpenseModal({ onClose }) {
     }
 
     const datos = {
-      nombre: nombre.trim(),
+      descripcion: nombre.trim(),
       monto: montoNumero,
       categoria,
     }

@@ -7,7 +7,7 @@ const mockExpenses = [
     descripcion: 'Supermercado',
     monto: 25000,
     categoria: 'Comida',
-    fecha: '2026-10-20',
+    fecha: '2026-10-20T12:00:00.000Z', //La hora 12:00 UTC evita que la zona horaria de Argentina cambie el día al mostrarlo.
     notas: 'Compra semanal de alimentos y artículos para el hogar.',
   },
   {
@@ -15,7 +15,7 @@ const mockExpenses = [
     descripcion: 'Combustible',
     monto: 18000,
     categoria: 'Transporte',
-    fecha: '2026-10-22',
+    fecha: '2026-10-22T12:00:00.000Z',
     notas: 'Carga de combustible del vehículo.',
   },
   {
@@ -23,7 +23,7 @@ const mockExpenses = [
     descripcion: 'Internet',
     monto: 32000,
     categoria: 'Servicios',
-    fecha: '2026-10-24',
+   	fecha: '2026-10-24T12:00:00.000Z',
     notas: 'Pago del servicio mensual de Internet.',
   },
 ]
