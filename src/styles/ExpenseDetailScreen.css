@@ -98,3 +98,44 @@
 
 .expense-detail__back:active { background: #EFF6FF; }
 .expense-detail__missing button:active { background: #1E40AF; }
+
+
+/* Acciones del detalle del gasto */
+.expense-detail__actions {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* Botón para eliminar gastos reales */
+.expense-detail__delete {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid #DC2626;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  color: #DC2626;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.expense-detail__delete:hover {
+  background-color: #FEF2F2;
+}
+
+.expense-detail__delete:focus-visible {
+  outline: 3px solid #FCA5A5;
+  outline-offset: 3px;
+}
+
+/* Aviso para los gastos simulados */
+.expense-detail__demo-notice {
+  margin-top: 20px;
+  color: #6B7280;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.5;
+}
