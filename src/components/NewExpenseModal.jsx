@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useExpenses } from '../context/ExpensesContext'
 import '../styles/NewExpenseModal.css'
 
 const CATEGORIAS = ['Comida', 'Transporte', 'Servicios', 'Otros']
 
-// Migrado de FormularioNuevoGasto.js (Proyecto1): en web usamos
-// <dialog> + showModal(), inputs HTML y botones accesibles.
+// Formulario modal para registrar nuevos gastos.
 export default function NewExpenseModal({ onClose }) {
   const dialogRef = useRef(null)
+
+  // Obtenemos la función que agrega gastos al Context.
+  const { addExpense } = useExpenses()
+
+  // Estados del formulario.
   const [nombre, setNombre] = useState('')
   const [monto, setMonto] = useState('')
   const [categoria, setCategoria] = useState('Comida')
@@ -15,69 +20,111 @@ export default function NewExpenseModal({ onClose }) {
 
   useEffect(() => {
     const dialog = dialogRef.current
-    if (dialog && !dialog.open) dialog.showModal()
 
-    // Cuando aparece el teclado virtual (especialmente en Safari/iOS),
-    // mantenemos la hoja visible y desplazable sobre el teclado.
+    // Abrimos el modal.
+    if (dialog && !dialog.open) {
+      dialog.showModal()
+    }
+
+    // Ajustamos el formulario cuando aparece el teclado virtual.
     const viewport = window.visualViewport
+
     const ajustarAlTeclado = () => {
       if (!dialog || !viewport) return
+
       const espacioInferior = Math.max(
         0,
         window.innerHeight - viewport.height - viewport.offsetTop
       )
-      dialog.style.setProperty('--keyboard-bottom', `${espacioInferior}px`)
-      dialog.style.setProperty('--visible-viewport-height', `${viewport.height}px`)
+
+      dialog.style.setProperty(
+        '--keyboard-bottom',
+        `${espacioInferior}px`
+      )
+
+      dialog.style.setProperty(
+        '--visible-viewport-height',
+        `${viewport.height}px`
+      )
     }
 
     ajustarAlTeclado()
+
     viewport?.addEventListener('resize', ajustarAlTeclado)
     viewport?.addEventListener('scroll', ajustarAlTeclado)
 
-    // También funciona correctamente con StrictMode en React.
+    // Limpiamos los eventos al cerrar el formulario.
     return () => {
       viewport?.removeEventListener('resize', ajustarAlTeclado)
       viewport?.removeEventListener('scroll', ajustarAlTeclado)
-      if (dialog?.open) dialog.close()
+
+      if (dialog?.open) {
+        dialog.close()
+      }
     }
   }, [])
 
+  // --------------------------------------------------
+  // GUARDAR UN GASTO
+  // --------------------------------------------------
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    // Conservamos la validación de nombre y monto de Proyecto1.
+    // Validamos que el nombre y el monto no estén vacíos.
     if (!nombre.trim() || !monto.trim()) {
-      setMensaje({ tipo: 'error', texto: 'Ingresá el nombre y el monto del gasto.' })
+      setMensaje({
+        tipo: 'error',
+        texto: 'Ingresá el nombre y el monto del gasto.',
+      })
       return
     }
 
-    const montoNumero = Number(monto.trim().replace(',', '.'))
+    // Convertimos el monto a número.
+    const montoNumero = Number(
+      monto.trim().replace(',', '.')
+    )
+
+    // Verificamos que el monto sea válido y mayor que cero.
     if (!Number.isFinite(montoNumero) || montoNumero <= 0) {
-      setMensaje({ tipo: 'error', texto: 'Ingresá un monto válido mayor a cero.' })
+      setMensaje({
+        tipo: 'error',
+        texto: 'Ingresá un monto válido mayor a cero.',
+      })
       return
     }
 
-    const datos = {
+ const nuevoGasto = {
       descripcion: nombre.trim(),
       monto: montoNumero,
-      categoria,
+      categoria: categoria,
+      notas: '',
     }
 
-    // Esta US no guarda gastos ni modifica el resumen/listado.
-    console.info('[ExpenseTracker] Formulario de prueba:', datos)
-    setMensaje({
-      tipo: 'exito',
-      texto: 'Formulario completado. Esto es una demostración: todavía no se guardan gastos.',
-    })
+    try {
+      // El Context se encarga de generar el ID y la fecha.
+      addExpense(nuevoGasto)
+
+      // Cerramos el formulario.
+      onClose()
+    } catch (error) {
+      console.error('Error al registrar el gasto:', error)
+
+      setMensaje({
+        tipo: 'error',
+        texto: 'No se pudo registrar el gasto.',
+      })
+    }
   }
 
+  // Cerramos el modal al tocar el fondo.
   const onClickDialog = (event) => {
-    // Clic en el fondo fuera de la hoja.
-    if (event.target === event.currentTarget) onClose()
+    if (event.target === event.currentTarget) {
+      onClose()
+    }
   }
 
+  // Cerramos el modal al presionar Escape.
   const onCancelDialog = (event) => {
-    // Esc en escritorio / gesto de cierre compatible.
     event.preventDefault()
     onClose()
   }
@@ -91,10 +138,18 @@ export default function NewExpenseModal({ onClose }) {
       onCancel={onCancelDialog}
     >
       <div className="new-expense-modal__sheet">
+
         <header className="new-expense-modal__header">
-          <div className="new-expense-modal__handle" aria-hidden="true" />
+          <div
+            className="new-expense-modal__handle"
+            aria-hidden="true"
+          />
+
           <div className="new-expense-modal__heading">
-            <h2 id="new-expense-title">Nuevo gasto</h2>
+            <h2 id="new-expense-title">
+              Nuevo gasto
+            </h2>
+
             <button
               type="button"
               className="new-expense-modal__close"
@@ -104,12 +159,23 @@ export default function NewExpenseModal({ onClose }) {
               ×
             </button>
           </div>
-          <p>Completá los datos para registrar un gasto.</p>
+
+          <p>
+            Completá los datos para registrar un gasto.
+          </p>
         </header>
 
-        <form className="new-expense-modal__form" onSubmit={handleSubmit} noValidate>
+        <form
+          className="new-expense-modal__form"
+          onSubmit={handleSubmit}
+          noValidate
+        >
+          {/* NOMBRE DEL GASTO */}
           <div className="new-expense-modal__field">
-            <label htmlFor="new-expense-name">Nombre del gasto</label>
+            <label htmlFor="new-expense-name">
+              Nombre del gasto
+            </label>
+
             <input
               id="new-expense-name"
               name="nombre"
@@ -125,8 +191,12 @@ export default function NewExpenseModal({ onClose }) {
             />
           </div>
 
+          {/* MONTO */}
           <div className="new-expense-modal__field">
-            <label htmlFor="new-expense-amount">Monto</label>
+            <label htmlFor="new-expense-amount">
+              Monto
+            </label>
+
             <input
               id="new-expense-amount"
               name="monto"
@@ -143,14 +213,22 @@ export default function NewExpenseModal({ onClose }) {
             />
           </div>
 
+          {/* CATEGORÍAS */}
           <fieldset className="new-expense-modal__categories">
             <legend>Categoría</legend>
+
             <div className="new-expense-modal__chips">
               {CATEGORIAS.map((opcion) => (
                 <button
                   type="button"
                   key={opcion}
-                  className={`new-expense-modal__chip ${categoria === opcion ? 'new-expense-modal__chip--selected' : ''}`}
+                  className={
+                    `new-expense-modal__chip ${
+                      categoria === opcion
+                        ? 'new-expense-modal__chip--selected'
+                        : ''
+                    }`
+                  }
                   aria-pressed={categoria === opcion}
                   onClick={() => {
                     setCategoria(opcion)
@@ -163,20 +241,32 @@ export default function NewExpenseModal({ onClose }) {
             </div>
           </fieldset>
 
+          {/* MENSAJES DE VALIDACIÓN */}
           {mensaje && (
             <p
-              className={`new-expense-modal__message new-expense-modal__message--${mensaje.tipo}`}
+              className={
+                `new-expense-modal__message new-expense-modal__message--${mensaje.tipo}`
+              }
               role={mensaje.tipo === 'error' ? 'alert' : 'status'}
             >
               {mensaje.texto}
             </p>
           )}
 
+          {/* BOTONES */}
           <div className="new-expense-modal__actions">
-            <button type="submit" className="new-expense-modal__save">
+            <button
+              type="submit"
+              className="new-expense-modal__save"
+            >
               Guardar
             </button>
-            <button type="button" className="new-expense-modal__cancel" onClick={onClose}>
+
+            <button
+              type="button"
+              className="new-expense-modal__cancel"
+              onClick={onClose}
+            >
               Cancelar
             </button>
           </div>

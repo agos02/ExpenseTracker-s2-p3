@@ -28,3 +28,92 @@
   font-size: 16px;
   line-height: 1.5;
 }
+
+
+/* Contenedor de las opciones de configuración */
+.settings-screen__content {
+  width: 100%;
+  max-width: 480px;
+  margin: 24px auto 0;
+  padding: 8px 20px;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+}
+
+/* Cada opción de configuración */
+.settings-screen__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid #E5E7EB;
+  cursor: pointer;
+}
+
+.settings-screen__option:last-child {
+  border-bottom: none;
+}
+
+/* Información de cada ajuste */
+.settings-screen__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-screen__info strong {
+  font-size: 16px;
+  color: #1F2937;
+}
+
+.settings-screen__info span {
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+/* Interruptor */
+.settings-screen__switch {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 28px;
+  border: none;
+  border-radius: 20px;
+  background-color: #D1D5DB;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Círculo del interruptor */
+.settings-screen__switch::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  transition: transform 0.2s ease;
+}
+
+/* Interruptor activado */
+.settings-screen__switch:checked {
+  background-color: #2563EB;
+}
+
+.settings-screen__switch:checked::before {
+  transform: translateX(20px);
+}
+
+/* Accesibilidad */
+.settings-screen__switch:focus-visible {
+  outline: 3px solid #93C5FD;
+  outline-offset: 3px;
+}
